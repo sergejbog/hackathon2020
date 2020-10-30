@@ -1,0 +1,119 @@
+<%- include("partials/header") %>
+    
+<div class="login_div">
+    <form>
+        <label for="usernameLogin" class="input_label">Username:</label>
+        <input type="text" name="usernameLogin" required>
+        
+        <label for="passwordLogin" class="input_label">Password:</label>
+        <input type="password" name="passwordLogin" required>
+
+        <button type="submit">Login</button>
+
+        <p><a href="#">Forgot Password?</a></p>
+        <p>No account? <a href="#" id="register-now">Register Now!</a></p>
+
+    </form>
+</div>
+
+<div id="register_popup">
+    <div class="register_div">
+        <span id="closeRegister">X</span>
+        <p class="sign-up">Sign Up!</p>
+        <form action="/" method="POST">
+            
+            <label for="usernameRegister" class="input_label">Username:</label>
+            <input type="text" name="usernameRegister" required>
+    
+            <div class="register_two">
+                <div class="register_two-row">
+                    <label for="firstname" class="input_label">First Name:</label>
+                    <input type="text" name="firstname" required>
+                </div>
+                
+                <div class="register_two-row">
+                    <label for="lastname" class="input_label">Last Name:</label>
+                    <input type="text" name="lastname" required>
+                </div>
+            </div>
+    
+            <label for="email" class="input_label">Email:</label>
+            <input type="email" name="email" required>
+    
+            <div class="register_two">
+                <div class="register_two-row">
+                    <label for="password1" class="input_label">Password:</label>
+                    <input type="password" name="password1" required>
+                </div>
+                
+                <div class="register_two-row">
+                    <label for="password2" class="input_label">Confirm Password:</label>
+                    <input type="password" name="password2" required>
+                </div>
+            </div>
+    
+            <p>Birthday:</p>
+            <div class="birthday-register">
+                <select name="day">
+                    <% for(let i = 1; i <= 31; i++)  { %>
+                        <option value="<%=i%>"><%=i%></option>
+                    <% }%>
+                </select>
+    
+                <select name="month">
+                    <% for(let i = 0; i < month.length; i++)  { %>
+                        <option value="<%=month[i]%>"><%=month[i]%></option>
+                    <% }%>
+                </select>
+                
+                <select name="year">
+                    <% for(let i = 2020; i >= 1901; i--)  { %>
+                        <option value="<%=i%>"><%=i%></option>
+                    <% }%>
+                </select>
+            </div>
+    
+            <div class="gender">
+                <p>Gender:</p>
+                <div class="gender-row">
+                    <input type="radio" class="radio-gender" id="male" name="gender" value="male">
+                    <label for="male">Male</label><br>
+                </div>
+                
+                <div class="gender-row">
+                    <input type="radio" class="radio-gender" id="female" name="gender" value="female">
+                    <label for="female">Female</label><br>
+                </div>
+    
+                <div class="gender-row">
+                    <input type="radio" class="radio-gender" id="other" name="gender" value="other">
+                    <label for="other">Other</label>
+                </div>  
+            </div>       
+    
+            <button class="register-button" type="submit">Sign Up</button>
+    
+        </form>
+    </div>
+</div>
+
+<script>
+    let registerPopup = document.querySelector('#register_popup'),
+        registerButton = document.querySelector('#register-now'),
+        closePopup = document.querySelector('#closeRegister');
+
+    registerButton.addEventListener('click', _ => {
+        registerPopup.style.opacity = 1;
+        registerPopup.style.visibility = 'visible';
+    });
+
+    closePopup.addEventListener('click', _ => {
+        registerPopup.style.opacity = 0;
+        registerPopup.style.visibility = 'hidden';
+    })
+
+    
+</script>
+
+
+<%- include("partials/footer") %>

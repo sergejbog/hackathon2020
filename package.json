@@ -1,0 +1,22 @@
+{
+  "name": "site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "scss": "node-sass --watch sass -o css"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "pg": "^8.4.2",
+    "scss": "^0.2.4"
+  }
+}
