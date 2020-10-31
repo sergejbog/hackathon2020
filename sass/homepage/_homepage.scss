@@ -1,78 +1,3 @@
-// .timeline_main{
-//     //background-color: red;
-//     @include center; 
-//     width:50%;
-//     height:100%;
-//     display: flex;  
-//     flex-direction: column;
-//     justify-content: center;
-//     .card{
-//         background-color: #ffffff;
-//         width:70%;
-//         height:80%;
-//         position: relative;
-//         align-self:center;      
-//         display: flex;
-//         flex-direction: column;
-//         justify-content: center;
-//         align-items: center;
-//         border-radius: 13px;
-//         box-shadow: #11111148 2px 5px 15px 5px;
-//     }
-//     .username_card{
-//         padding:25px 20px 15px 20px;
-//         align-items:center;
-//         display:flex;
-//         height:100px;
-//         width:100%;
-//         border-bottom: 2px #11111160 solid;
-//         top:0;
-//         left:0;
-//         position: absolute;
-//         & > div::before{
-//             content: "";    
-//             position: absolute;
-//             width:64px;
-//             height:64px;
-//             border-radius: 50%;
-//             z-index: 4;
-//             border:4px #8e44ad solid;
-//         } 
-//         div{
-//             position: absolute;
-//             display:flex;
-//             flex-direction: row;
-//             p{
-//                 align-self: center;
-//                 margin-left:10px;
-//                 font-size: 1.7rem;
-//             }
-//         }
-//         img{
-//             border-radius: 50%;
-//             width:64px;
-//             height:64px;
-//             margin-bottom:3px;
-//         }        
-//     }
-    
-//     .main_card{
-//         padding-top: 55px;
-//         text-align: center;
-//         height:80%;
-//         width:80%;
-//         img{
-//             width:70%;
-
-//         }
-//     }
-//     .sidebar_card{
-//         border-top: 2px #11111160 solid;
-//         position: absolute;
-//         bottom:10px;    
-//     }
-// }
-
 .timeline_main{
     //background-color: red;
     margin: 0 auto;
@@ -102,6 +27,14 @@
         border-radius: 13px;
         border-radius: 11px;
         box-shadow: #11111148 2px 5px 15px 5px;
+
+        &_description {
+            font-size: 16px;
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 0 20px;
+            text-align: left;
+        }
 
     }
     .username_card_container{
@@ -193,6 +126,50 @@
         font-size: 2rem;
         //background-color: white;
         bottom:10px;
-        width:100%;    
+        width:100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .date-uplodaded {
+            font-size: 12px;
+            padding-right: 10px;
+            font-style: italic;
+        }
     }
+}
+
+.upvote, .downvote {
+    width: 32px;
+    height: 32px;
+    stroke-width: 30;
+    stroke: #111111;
+    fill: #111111;
+    transition: all .2s;
+    cursor: pointer;
+}
+
+.upvote {
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+.upvote:hover {
+    fill: $color-primary;
+    stroke: $color-primary;
+}
+
+.downvote:hover {
+    fill: $color-red;
+    stroke: $color-red;
+}
+
+.voted-green {
+    fill: $color-primary;
+    stroke: $color-primary;
+}
+
+.voted-red {
+    fill: $color-red;
+    stroke: $color-red;
 }
