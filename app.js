@@ -64,7 +64,7 @@ app.post('/', function(req, res){
         });        
     }
 
-    else {
+    else if(req.body.usernameLogin){
         let text = `SELECT pw FROM users WHERE username = $1`;
         let values = [req.body.usernameLogin];
 
@@ -84,6 +84,10 @@ app.post('/', function(req, res){
               }
             }
         });
+    }
+
+    else if(req.body.userDescription) {
+        let text = 'INSERT INTO posts(userid)'
     }
 });
 

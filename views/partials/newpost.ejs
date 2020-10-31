@@ -1,8 +1,8 @@
 
-<button>Upload!</button>
+<button class="upload-button">Upload!</button>
 
 <div id="upload_popup">
-    <div class="register_div">
+    <div class="register_div upload_div">
         <span id="closeUpload">X</span>
         <p class="sign-up">Upload Your Good Deed!</p>
         <form action="/" method="POST">
@@ -18,9 +18,22 @@
     </div>
 </div>
 <script>
-    var loadFile = (event)=>{
-        var image = document.getElementById('output');
-	    image.src = URL.createObjectURL(event.target.files[0]);
+    let uploadButton = document.querySelector('.upload-button'),
+        uploadPopup = document.querySelector('#upload_popup'),
+        closeUpload = document.querySelector('#closeUpload');
+        
+    let loadFile = (event)=>{
+        let image = document.getElementById('output');
+        image.src = URL.createObjectURL(event.target.files[0]);
     };
+    
+    uploadButton.addEventListener('click', e => {
+        uploadPopup.style.opacity = 1;
+        uploadPopup.style.visibility = 'visible';
+    });
+
+    closeUpload.addEventListener('click', _ => {
+        uploadPopup.style.opacity = 0;
+        uploadPopup.style.visibility = 'hidden';
+    })
 </script>
-<!--
