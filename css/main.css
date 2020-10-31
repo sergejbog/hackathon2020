@@ -158,21 +158,37 @@ body {
     justify-content: space-evenly; }
     .navbar_container .navbar_profile .user_points {
       font-size: 2rem; }
-
-.profile_rounder {
-  position: relative; }
-  .profile_rounder::before {
-    content: "";
+  .navbar_container .profile_rounder {
+    position: relative; }
+    .navbar_container .profile_rounder::before {
+      content: "";
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      z-index: 4;
+      border: 2px #27ae60 solid; }
+    .navbar_container .profile_rounder .profile_picture {
+      border-radius: 12px;
+      width: 64px;
+      height: 64px; }
+  .navbar_container .navbar_search {
     position: absolute;
-    width: 64px;
-    height: 64px;
-    border-radius: 12px;
-    z-index: 4;
-    border: 2px #27ae60 solid; }
-  .profile_rounder .profile_picture {
-    border-radius: 12px;
-    width: 64px;
-    height: 64px; }
+    top: 35px;
+    left: 50%;
+    transform: translate(-50%, -50%); }
+    .navbar_container .navbar_search input {
+      border: none;
+      width: 25vw;
+      padding: 10px; }
+    .navbar_container .navbar_search input:not([type="radio"]), .navbar_container .navbar_search select {
+      border: 1px solid #888888;
+      padding: 1rem 1rem;
+      transition: all .3s;
+      border-radius: 5px; }
+    .navbar_container .navbar_search input:focus {
+      outline: none;
+      background-color: #cccccc; }
 
 .timeline_main {
   margin: 0 auto;
