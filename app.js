@@ -15,6 +15,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 app.use(express.static('css'));
+app.use(express.static('data'));
 
 const pool = new Pool({
     user: config.dbuser,

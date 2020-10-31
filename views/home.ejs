@@ -1,5 +1,7 @@
 <%- include("partials/header") %>
-    
+<% 
+let authenticated = true;
+if (!authenticated) { %> 
 <div class="login_div">
     <form action="/" method="POST">
         <label for="usernameLogin" class="input_label">Username:</label>
@@ -114,6 +116,27 @@
 
     
 </script>
+<% } else{ %>
+<div class="timeline_main">
+    <div class="card">
+        <div class="username_card">
+            <img src="/img/ProfilePictures/profilna.png" alt="">
+            @david.arsov3
+        </div>
+        <div class="main_card">
+            <img src="/img/mainimage.jpg" alt="">
+        </div>
+        <div class="sidebar_card">
+            <a href="#">lajk</a>
+            <a href="#">sharaj</a>
+            <a href="#">subscrajber</a>
+        </div>
+
+    </div>
 
 
+</div>
+
+
+<% } %> 
 <%- include("partials/footer") %>
