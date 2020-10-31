@@ -1,0 +1,97 @@
+.profile-container {
+    width: 50vw;
+    margin: 0 auto;
+    margin-top: 100px;
+    
+    .profile-info {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        img {
+            border-radius: 12px;
+        }
+
+         &__text {
+            font-size: 20px;
+            margin-top: 10px;
+            text-align: center;
+
+            &-numberinfo {
+                display: flex;
+                flex-direction: row;
+                
+                p {
+                    margin: 20px 25px;
+                }
+            }
+         }
+    }
+
+    .profile-choose {
+        text-align: center;
+        margin-top: 100px;
+        border-bottom: 1px solid $color-gray-dark;
+        border-top: 1px solid $color-gray-dark;
+        padding: 20px 0;
+
+        a {
+            font-size: 20px;
+            text-decoration: none;
+            color: $color-gray-dark;
+            margin: 0 70px;
+            padding: 19.5px 5px;
+        }
+
+        .a-active {
+            border-top: black 2px solid;
+            border-bottom: black 2px solid;
+            color: black;
+        }
+
+        a:hover {
+            border-top: black 2px solid;
+            border-bottom: black 2px solid;
+            color: black;
+        }
+    }
+
+    .profile-feed-photos {
+        width: 100%;
+        height: auto;
+        margin-top: 50px;
+
+        &-row {
+            display: flex;
+            justify-content: space-around;
+
+            img {
+                width: 25%;
+                height: 250px;
+                object-fit: cover;
+                cursor: pointer;
+                transition: scale(1.0);
+                transition: all .3s;
+
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+        }
+    }
+
+    .profile-feed-events {
+        display: none;
+    }
+
+}
+
+.popup-feed-photos {
+    width: 100vw;
+    // height: 100%;
+    position: fixed;
+    top: 0;
+    background-color: #95a5a6;
+    opacity: .6;
+}
