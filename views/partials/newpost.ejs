@@ -1,0 +1,26 @@
+
+<button>Upload!</button>
+
+<div id="upload_popup">
+    <div class="register_div">
+        <span id="closeUpload">X</span>
+        <p class="sign-up">Upload Your Good Deed!</p>
+        <form action="/" method="POST">
+
+            <input type="file" accept="image/*" onchange="loadFile(event)" name="userImage" required>
+            <p><img id="output" style="width:100%;"></p>
+            <label for="userDescription" class="input_label">Description:</label>
+            <input type="text" name="userDescription">
+    
+            <button class="register-button" type="submit">Upload Now!</button>
+    
+        </form>
+    </div>
+</div>
+<script>
+    var loadFile = (event)=>{
+        var image = document.getElementById('output');
+	    image.src = URL.createObjectURL(event.target.files[0]);
+    };
+</script>
+<!--

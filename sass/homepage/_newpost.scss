@@ -1,0 +1,24 @@
+
+button{
+    
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: 30vw;
+    background-color: $color-primary;
+    padding: 1rem 1rem;
+    border-radius: 3px;
+    color: $color-grey-light-1;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 1.1px;
+    transition: .3s all;
+    margin: 20px auto;
+    border-radius: 5px;
+    background-color: $color-primary;
+    padding:16px 64px;
+    &:hover {
+        background-color: $color-primary-dark;
+    }
+    box-shadow: #11111127 2px 5px 15px 5px;
+}
