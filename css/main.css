@@ -139,10 +139,6 @@ body {
   margin-top: 0; }
 
 .timeline_main {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   margin: 0 auto;
   width: 50%;
   height: 100%;
@@ -152,7 +148,7 @@ body {
   overflow: visible;
   flex-direction: column;
   justify-content: center;
-  margin-top: 100px; }
+  margin-top: 30px; }
   .timeline_main .card {
     margin: 10px;
     background-color: #ffffff;
@@ -169,6 +165,12 @@ body {
     border-radius: 13px;
     border-radius: 11px;
     box-shadow: #11111148 2px 5px 15px 5px; }
+    .timeline_main .card_description {
+      font-size: 16px;
+      margin-bottom: 20px;
+      width: 100%;
+      padding: 0 20px;
+      text-align: left; }
   .timeline_main .username_card_container {
     height: 200px;
     width: 100%;
@@ -241,7 +243,43 @@ body {
     margin: -3px;
     font-size: 2rem;
     bottom: 10px;
-    width: 100%; }
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; }
+    .timeline_main .sidebar_card .date-uplodaded {
+      font-size: 12px;
+      padding-right: 10px;
+      font-style: italic; }
+
+.upvote, .downvote {
+  width: 32px;
+  height: 32px;
+  stroke-width: 30;
+  stroke: #111111;
+  fill: #111111;
+  transition: all .2s;
+  cursor: pointer; }
+
+.upvote {
+  margin-left: 5px;
+  margin-right: 10px; }
+
+.upvote:hover {
+  fill: #2ecc71;
+  stroke: #2ecc71; }
+
+.downvote:hover {
+  fill: #e74c3c;
+  stroke: #e74c3c; }
+
+.voted-green {
+  fill: #2ecc71;
+  stroke: #2ecc71; }
+
+.voted-red {
+  fill: #e74c3c;
+  stroke: #e74c3c; }
 
 .profile-container {
   width: 50vw;

@@ -26,7 +26,13 @@ const pool = new Pool({
 });
 
 app.get('/', (req,res) => {
-    res.render('home.ejs',{month: month, loginError: false});
+    pool.query('SELECT * FROM posts ORDER BY dateUploaded DESC LIMIT 5', (err, response) => {
+        if (err) {
+          console.log(err)
+        } else { 
+            res.render('home.ejs',{month: month, loginError: false, posts: response.rows});
+        } 
+    });
 })
 
 app.post('/', function(req, res){
