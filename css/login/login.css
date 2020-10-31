@@ -59,6 +59,12 @@
 
 .register_div {
   width: 27vw; }
+  .register_div * {
+    transition: all .3s; }
+  .register_div .hidden {
+    opacity: 0;
+    height: 0;
+    margin-top: 0; }
   .register_div #closeRegister {
     position: absolute;
     right: 3rem;
@@ -104,3 +110,15 @@
 .popUp-show {
   opacity: 1;
   visibility: visible; }
+
+.register-error, .login-error {
+  color: #e74c3c;
+  font-weight: 600;
+  display: inline-block;
+  opacity: 1;
+  transition: all .15s; }
+
+.hidden {
+  opacity: 0;
+  height: 0;
+  margin-top: 0; }
