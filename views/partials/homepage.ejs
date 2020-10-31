@@ -1,17 +1,6 @@
 <%- include("navbar")%>
 
 
-<<<<<<< HEAD
-<div class="timeline_main">
-    <%- include("newpost")%>
-    <div class="card">
-        <div class="username_card">
-            <div>
-                <img src="/img/ProfilePictures/profilna.png" alt="">
-                <div class="linfo_card">
-                    <p>@david.arsdadadadadadov3 </p>
-                    <p style="font-weight: 400; color:#95a5a6" class="linfo_card-location">lokacija: pekol</p>
-=======
 <% posts.forEach(post => { %>
 
     <div class="timeline_main">
@@ -38,7 +27,6 @@
                     <svg class="downvote">
                         <use href="#downvote"></use>
                     </svg>
->>>>>>> origin/sergej
                 </div>
                 <div class="date-uplodaded"><p><%=post.dateuploaded.toDateString()%></p></div>
             </div>
