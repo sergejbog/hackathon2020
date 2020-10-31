@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 const month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended : false}));
 app.use(express.json());
 
 app.use(express.static('css'));

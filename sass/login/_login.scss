@@ -33,10 +33,10 @@
             background: none;
             cursor: pointer;
             width: 100%;
-            background-color: #2ecc71;
+            background-color: $color-primary;
             padding: 1rem 1rem;
             border-radius: 3px;
-            color: #f3f3f3;
+            color: $color-grey-light-1;
             font-weight: 700;
             font-size: 1.8rem;
             letter-spacing: 1.1px;
@@ -45,12 +45,12 @@
             border-radius: 5px;
 
             &:hover {
-                background-color: #27ae60;
+                background-color: $color-primary-dark;
             }
         }
 
         a {
-            color: #27ae60;
+            color: $color-primary-dark;
             font-weight: 700;
             
             padding-bottom: 2px;
@@ -60,7 +60,7 @@
         }
 
         a:hover {
-            border-bottom: 1px solid #27ae60;
+            border-bottom: 1px solid $color-primary-dark;
         }
     }   
 }
