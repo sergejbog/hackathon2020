@@ -23,7 +23,7 @@
                 font-size:2rem;
                 
             }}
-        }
+        
     
     
         .profile_rounder{
@@ -42,7 +42,30 @@
             border-radius: 12px;
             width:64px;
             height:64px;
-        }
+        }}
+        .navbar_search{
+            position: absolute;
+            top:35px;
+            left:50%;
+            transform: translate(-50%,-50%);
+            input{
+                
+                border:none;        
+                width:25vw;
+                padding:10px;
+                
         
+            }
+            input:not([type="radio"]),select {
+                border: 1px solid #888888;
+                padding: 1rem 1rem;
+                transition: all .3s;
+                border-radius: 5px;
+            }
     
-    }
+            input:focus {
+                outline: none;
+                background-color: #cccccc;
+            }
+        }
+}
