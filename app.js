@@ -4,7 +4,8 @@ const config = require('./config.json');
 const path = require('path');
 const app = express();
 require('ejs');
-const md5 = require('md5');
+const { SHA3 } = require('sha3');
+const hash = new SHA3(512);
 
 const PORT = process.env.PORT || 3000;
 
@@ -38,9 +39,11 @@ app.post('/', function(req, res){
             } else {
                 if(response.rows[0] == undefined) {
                     let dob = `${req.body.year}-${month.indexOf(req.body.month) + 1}-${req.body.day}`;
-
+                    hash.update(req.body.password1);
                     let text = 'INSERT INTO users(username,firstname,lastname,email,pw,dob,gender) VALUES($1, $2, $3, $4, $5, $6, $7)';
-                    let values = [req.body.usernameRegister, req.body.firstname, req.body.lastname, req.body.email, md5(req.body.password1), dob, req.body.gender];
+                    let values = [req.body.usernameRegister, req.body.firstname, req.body.lastname, req.body.email, hash.digest('hex'), dob, req.body.gender];
+
+                    hash.reset();
                 
                     pool.query(text, values, (err, response) => {
                         if (err) {
@@ -65,13 +68,15 @@ app.post('/', function(req, res){
             if (err) {
               console.log(err)
             } else {
-              console.log(response.rows[0]);
+                hash.update(req.body.passwordLogin);
               if ( response.rows[0] == undefined){
                   res.send("ne postoj username");
-              } else if(md5(req.body.passwordLogin) != response.rows[0].pw){
+              } else if(hash.digest('hex') != response.rows[0].pw){
                   res.send("gresen password");
+                  hash.reset();
               } else {
                   res.send("uspesna najava");
+                  hash.reset();
               }
             }
         });
