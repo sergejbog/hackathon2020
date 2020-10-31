@@ -1,7 +1,7 @@
 <%- include("partials/header") %>
 <% 
-let loggedOn = false;
-if (loggedOn) { %> 
+
+if (!loggedOn) { %>
 
 <%- include("partials/login")%>
 
@@ -9,5 +9,5 @@ if (loggedOn) { %>
 
 <%- include("partials/homepage")%>
 
-<% } %> 
+<% } %>
 <%- include("partials/footer") %>
