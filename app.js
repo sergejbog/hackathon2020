@@ -4,6 +4,8 @@ const config = require('./config.json');
 const path = require('path');
 const app = express();
 require('ejs');
+const session = require('express-session')
+
 const { SHA3 } = require('sha3');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
@@ -19,8 +21,15 @@ const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'O
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+
 app.use(express.static('css'));
 app.use(express.static('data'));
+
+app.use(session({
+    secret: config.secret,
+    resave: false,
+    saveUninitialized: false,
+}));
 
 const pool = new Pool({
     user: config.dbuser,
@@ -31,13 +40,26 @@ const pool = new Pool({
 });
 
 app.get('/', (req,res) => {
-    pool.query('SELECT * FROM posts ORDER BY dateUploaded DESC LIMIT 5', (err, response) => {
-        if (err) {
-          console.log(err)
-        } else { 
-            res.render('home.ejs',{month: month, loginError: false, posts: response.rows});
-        } 
-    });
+    if(req.session.userId){
+        pool.query('SELECT * FROM posts ORDER BY dateUploaded DESC LIMIT 5', (err, response) => {
+            if (err) {
+              console.log(err)
+            } else { 
+                res.render('home.ejs',{
+                    loggedOn: true, 
+                    posts: response.rows, 
+                    user:{
+                        username: req.session.username,
+                        id: req.session.userId,
+                        isVerified: req.session.isVerified
+                }
+            });
+            } 
+        });
+    } else {
+        res.render("home.ejs", {loggedOn : false, month: month, loginError: false})
+    }
+    
 })
 app.get('/verify-account',(req,res) => {
     console.log(req.query);
@@ -116,13 +138,27 @@ app.post('/', function(req, res){
                   hash.reset();
               } else {
                     hash.reset();
-                    res.render("homepage.ejs",{loggedOn: true,
-                        user:{
-                            username: response.rows[0].username,
-                            id: response.rows[0].id,
-                            isVerified: response.rows[0].verified
-                        }
+                    req.session.userId = response.rows[0].id;
+                    req.session.username = response.rows[0].username;
+                    req.session.isVerified = response.rows[0].verified;
+                    pool.query('SELECT * FROM posts ORDER BY dateUploaded DESC LIMIT 5', (err, response) => {
+                        if (err) {
+                          console.log(err)
+                        } else { 
+                            res.render('home.ejs',{
+                                loggedOn: true, 
+                                posts: response.rows, 
+                                user:{
+                                    username: response.rows[0].username,
+                                    id: response.rows[0].id,
+                                    isVerified: response.rows[0].verified
+                            }
+                        });
+                        } 
                     });
+
+
+                        
                   
               }
             }
