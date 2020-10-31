@@ -4,6 +4,7 @@ const config = require('./config.json');
 const path = require('path');
 const app = express();
 require('ejs');
+const md5 = require('md5');
 
 const PORT = process.env.PORT || 3000;
 
@@ -24,22 +25,58 @@ const pool = new Pool({
 
 app.get('/', (req,res) => {
     res.render('home.ejs',{month: month});
+
+    console.log(req);
 })
 
 app.post('/', function(req, res){
-    let dob = `${req.body.year}-${month.indexOf(req.body.month) + 1}-${req.body.day}`;
 
-    text = 'INSERT INTO users(username,firstname,lastname,email,pw,dob,gender) VALUES($1, $2, $3, $4, $5, $6, $7)';
-    values = [req.body.usernameRegister, req.body.firstname, req.body.lastname, req.body.email, req.body.password1, dob, req.body.gender];
+    if(req.body.year) {
+        pool.query('SELECT * FROM users WHERE username=$1', [req.body.usernameRegister], (err, response) => {
+            if(err) {
+                console.log(err)
+            } else {
+                if(response.rows[0] == undefined) {
+                    let dob = `${req.body.year}-${month.indexOf(req.body.month) + 1}-${req.body.day}`;
 
-    pool.query(text, values, (err, res) => {
-        if (err) {
-          console.log(err)
-        } else {
-          console.log(res)
-        }
-    });
-    res.render("home.ejs",{month: month})
+                    let text = 'INSERT INTO users(username,firstname,lastname,email,pw,dob,gender) VALUES($1, $2, $3, $4, $5, $6, $7)';
+                    let values = [req.body.usernameRegister, req.body.firstname, req.body.lastname, req.body.email, md5(req.body.password1), dob, req.body.gender];
+                
+                    pool.query(text, values, (err, response) => {
+                        if (err) {
+                          console.log(err)
+                        } else {
+                          console.log(response)
+                        }
+                    });
+                    res.send("uspesna registracija")
+                } else {
+                    res.send("vejce postoj user");
+                }
+            }
+        });        
+    }
+
+    else {
+        let text = `SELECT pw FROM users WHERE username = $1`;
+        let values = [req.body.usernameLogin];
+
+        pool.query(text, values, (err, response) => {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log(response.rows[0]);
+              if ( response.rows[0] == undefined){
+                  res.send("ne postoj username");
+              } else if(md5(req.body.passwordLogin) != response.rows[0].pw){
+                  res.send("gresen password");
+              } else {
+                  res.send("uspesna najava");
+              }
+            }
+        });
+    }
+    
 });
 
 app.listen(PORT, _ => {
