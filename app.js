@@ -26,9 +26,7 @@ const pool = new Pool({
 });
 
 app.get('/', (req,res) => {
-    res.render('home.ejs',{month: month});
-
-    console.log(req);
+    res.render('home.ejs',{month: month, loginError: false});
 })
 
 app.post('/', function(req, res){
@@ -71,9 +69,9 @@ app.post('/', function(req, res){
             } else {
                 hash.update(req.body.passwordLogin);
               if ( response.rows[0] == undefined){
-                  res.send("ne postoj username");
+                    res.render('home.ejs',{month: month, loginError: true});
               } else if(hash.digest('hex') != response.rows[0].pw){
-                  res.send("gresen password");
+                    res.render('home.ejs',{month: month, loginError: true});
                   hash.reset();
               } else {
                   res.send("uspesna najava");
@@ -82,7 +80,22 @@ app.post('/', function(req, res){
             }
         });
     }
-    
+});
+
+app.get('/check', (req, res) => {
+    let text = `SELECT username FROM users WHERE username = $1`;
+    let values = [req.query.username];
+    pool.query(text, values, (err, response) => {
+        if (err) {
+          console.log(err)
+        } else {
+            if(response.rows[0]) {
+                res.send(response.rows[0]);
+            } else {
+                res.send({username: false});
+            }
+        }
+    });
 });
 
 app.listen(PORT, _ => {

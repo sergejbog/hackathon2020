@@ -6,6 +6,8 @@
         <label for="passwordLogin" class="input_label">Password:</label>
         <input type="password" name="passwordLogin" required>
 
+    <p class="login-error <% if(!loginError) { %> <%="hidden"%> <% } %>">Incorrect username or password</p>
+
         <button type="submit">Login</button>
 
         <p><a href="#">Forgot Password?</a></p>
@@ -21,6 +23,7 @@
         <form action="/" method="POST">
             
             <label for="usernameRegister" class="input_label">Username:</label>
+            <p class="register-error hidden">Username already exists</p>
             <input type="text" name="usernameRegister" required>
     
             <div class="register_two">
@@ -108,7 +111,22 @@
     closePopup.addEventListener('click', _ => {
         registerPopup.style.opacity = 0;
         registerPopup.style.visibility = 'hidden';
+    });
+
+    let signUp = document.querySelector('.register-button'),
+        registerUsername = document.querySelector('input[name="usernameRegister"]'),
+        errorRegister = document.querySelector('.register-error');
+
+    registerUsername.addEventListener('blur', _ => {
+        fetch(`/check?username=${registerUsername.value}`)
+            .then(response => response.json())
+            .then(commits => {
+                if(commits.username != false) {
+                    errorRegister.classList.remove('hidden');
+                } else {
+                    errorRegister.classList.add('hidden');
+                }
+        });
     })
 
-    
 </script>
