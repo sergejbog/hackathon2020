@@ -1,0 +1,81 @@
+<%- include("partials/header") %>
+
+<div class="profile-container">
+    <div class="profile-info">
+        <div><img src="/img/ProfilePictures/profilna.png" class="profile_picture" alt="profile-picture"></div>
+        <div class="profile-info__text">
+            <p class="profile-info__text-username">@david.arsovski333</p>
+            <div class="profile-info__text-numberinfo">
+                <p class="profile-info__text-numberinfo_posts">Posts: <strong>16</strong></p>
+                <p class="profile-info__text-numberinfo_followers">Followers: <strong>10</strong></p>
+                <p class="profile-info__text-numberinfo_following">Following: <strong>21</strong></p>
+            </div>
+            <p class="profile-info__rating">Rating: <strong>1000</strong></p>
+        </div>
+    </div>
+    <div class="profile-choose">
+        <a href="javascript:void(0)" id="photos" class="<% if(activeNow == "photos") { %> <%="a-active"%> <% } %>">Photos</a>
+        <a href="javascript:void(0)" id="events" class="<% if(activeNow == "events") { %> <%="a-active"%> <% } %>">Events</a>
+    </div>
+    <div class="profile-feed-photos">
+        <div class="profile-feed-photos-row">
+            <img src="/img/ProfilePictures/profilna.png" class="profile-feed-photos-photo" alt="">
+            <img src="/img/mainimage.jpg" class="profile-feed-photos-photo" alt="">
+            <img src="/img/ProfilePictures/profilna.png" class="profile-feed-photos-photo" alt="">
+        </div>
+    </div>
+    <div class="profile-feed-events">
+        <p>Чао</p>
+    </div>
+</div>
+
+<!-- <div class="popup-feed-photos">
+    
+</div> -->
+
+<script>
+    let eventsButton = {
+        button: document.querySelector('#events'),
+        div: document.querySelector('.profile-feed-events'),
+        change: function() {
+            this.button.classList.add('a-active');
+            this.div.style.display = "block";
+            photosButton.remove();
+        },
+        remove: function() {
+            this.button.classList.remove('a-active');
+            this.div.style.display = "none";
+        }
+    }
+
+    let photosButton = {
+        button: document.querySelector('#photos'),
+        div: document.querySelector('.profile-feed-photos'),
+        change: function() {
+            this.button.classList.add('a-active');
+            this.div.style.display = "block";
+            eventsButton.remove();
+        },
+        remove: function() {
+            this.button.classList.remove('a-active');
+            this.div.style.display = "none";
+        }
+    }
+
+    photosButton.button.addEventListener('click', _ => {
+        photosButton.change();
+    });
+
+    eventsButton.button.addEventListener('click', _ => {
+        eventsButton.change();
+    });
+
+    let feedPhotos = document.querySelectorAll('.profile-feed-photos-photo');
+    feedPhotos.forEach((photo,i) => {
+        photo.addEventListener('click', e => {
+            console.log(i);
+        })
+    })
+</script>
+
+<%- include("partials/footer") %>

@@ -30,7 +30,6 @@ app.get('/', (req,res) => {
 })
 
 app.post('/', function(req, res){
-
     if(req.body.year) {
         pool.query('SELECT * FROM users WHERE username=$1', [req.body.usernameRegister], (err, response) => {
             if(err) {
@@ -96,6 +95,10 @@ app.get('/check', (req, res) => {
             }
         }
     });
+});
+
+app.get('/profile', (req, res) => {
+    res.render('profile.ejs',{activeNow: 'photos'});
 });
 
 app.listen(PORT, _ => {
