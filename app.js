@@ -65,7 +65,7 @@ app.post('/', function(req, res){
     }
 
     else {
-        let text = `SELECT pw FROM users WHERE username = $1`;
+        let text = `SELECT * FROM users WHERE username = $1`;
         let values = [req.body.usernameLogin];
 
         pool.query(text, values, (err, response) => {
@@ -79,8 +79,15 @@ app.post('/', function(req, res){
                     res.render('home.ejs',{month: month, loginError: true});
                   hash.reset();
               } else {
-                  res.send("uspesna najava");
-                  hash.reset();
+                    hash.reset();
+                    res.render("homepage.ejs",{loggedOn: true,
+                        user:{
+                            username: response.rows[0].username,
+                            id: response.rows[0].id,
+                            isVerified: response.rows[0].verified
+                        }
+                    });
+                  
               }
             }
         });
