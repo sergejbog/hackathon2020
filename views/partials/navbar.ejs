@@ -3,17 +3,26 @@
         
 
         <div class="navbar_profile">
-            <div class = "profile_rounder">
-                <img class = "profile_picture" src="/img/ProfilePictures/profilna.png" alt="">
-            </div>
-            <div class="user_points" id="kms">
+            <a href="/profile" class = "profile_rounder">
+                <% if(user.profilePic == "") { %> 
+                    <img class = "profile_picture" src="/img/ProfilePictures/blank-picture.jpg" alt="">
+                <% } else { %> 
+                    <img class = "profile_picture" src="/img/ProfilePictures/<%= user.profilePic %>" alt="">
+                <% } %>
+            </a>
+            <div class="user_points">
                 <p>Points: 1000</p>
             </div>
         </div>
         <div class="navbar_search">
             <input type="text" name="search" id="" placeholder = "Search!" autocomplete="off">
         </div>
-
-
     </div>
 </div>
+
+<script>
+    let profile = document.querySelector('.profile_rounder');
+    profile.addEventListener('click', e => {
+
+    })
+</script>
