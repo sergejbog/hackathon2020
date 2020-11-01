@@ -22,32 +22,3 @@ button{
     }
     box-shadow: #11111127 2px 5px 15px 5px;
 }
-
-#upload_popup {
-    width: 100vw;
-    height: 100vh;
-    background-color: #7f8c8de3;
-    opacity: 0;
-    visibility: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 200;
-    transition: all .2s;
-}
-
-#closeUpload {
-    position: absolute;
-    right: 30px;
-    top: 30px;
-    font-weight: 700;
-    font-size: 16px;
-    cursor: pointer;
-    color:#7f8c8de3;
-    transition: all .2s;
-}
-
-#closeUpload:hover {
-    color: #111111;
-}
-

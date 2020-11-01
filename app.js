@@ -2,12 +2,10 @@ const { Pool, Client } = require('pg');
 const express = require('express');
 const config = require('./config.json');
 const path = require('path');
-const fs = require('fs');
 const app = express();
 require('ejs');
-const session = require('express-session');
-const upload = require('express-fileupload');
-  
+const session = require('express-session')
+
 const { SHA3 } = require('sha3');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
@@ -31,8 +29,6 @@ app.use(session({
     saveUninitialized: false,
 }));
 
-app.use(upload());
-
 const pool = new Pool({
     user: config.dbuser,
     host: config.dbhost,
@@ -43,20 +39,33 @@ const pool = new Pool({
 
 app.get('/', (req,res) => {
     if(req.session.userId){
-        makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
+        pool.query('SELECT * FROM posts ORDER BY dateUploaded DESC LIMIT 5', (err, response) => {
+            if (err) {
+              console.log(err)
+            } else { 
+                res.render('home.ejs',{
+                    loggedOn: true, 
+                    posts: response.rows, 
+                    user:{
+                        username: req.session.username,
+                        id: req.session.userId,
+                        isVerified: req.session.isVerified
+                }
+            });
+            } 
+        });
     } else {
         res.render("home.ejs", {loggedOn : false, month: month, loginError: false})
     }
+    
 })
 app.get('/verify-account',(req,res) => {
     console.log(req.query);
 })
 
-app.post('/', function(req, res){
-    console.log(req.body.year);
-    console.log(req.body.usernameLogin);
-    console.log(req.body.userImage);
+//verify.signup();
 
+app.post('/', function(req, res){
     if(req.body.year) {
         pool.query('SELECT * FROM users WHERE username=$1', [req.body.usernameRegister], (err, response) => {
             if (err) {
@@ -95,6 +104,7 @@ app.post('/', function(req, res){
                     
 
                     hash.reset();
+                    pool.query(`SELECT`)
                     pool.query(text, values, (err, response) => {
                         if (err) {
                             console.log(err)
@@ -110,7 +120,7 @@ app.post('/', function(req, res){
         });
     }
 
-    else if(req.body.usernameLogin){
+    else {
         let text = `SELECT * FROM users WHERE username = $1`;
         let values = [req.body.usernameLogin];
 
@@ -120,48 +130,37 @@ app.post('/', function(req, res){
             } else {
                 hash.update(req.body.passwordLogin);
               if ( response.rows[0] == undefined){
-                    res.render('home.ejs',{month: month, loginError: true, loggedOn: false});
+                    res.render('home.ejs',{month: month, loginError: true});
               } else if(hash.digest('hex') != response.rows[0].pw){
-                    res.render('home.ejs',{month: month, loginError: true, loggedOn: false});
+                    res.render('home.ejs',{month: month, loginError: true});
                   hash.reset();
               } else {
                     hash.reset();
                     req.session.userId = response.rows[0].id;
                     req.session.username = response.rows[0].username;
                     req.session.isVerified = response.rows[0].verified;
-                    req.session.profilePic = response.rows[0].profilePicture || "";
+                    pool.query('SELECT * FROM posts ORDER BY dateUploaded DESC LIMIT 5', (err, response) => {
+                        if (err) {
+                          console.log(err)
+                        } else { 
+                            res.render('home.ejs',{
+                                loggedOn: true, 
+                                posts: response.rows, 
+                                user:{
+                                    username: response.rows[0].username,
+                                    id: response.rows[0].id,
+                                    isVerified: response.rows[0].verified
+                            }
+                        });
+                        } 
+                    });
 
-                    console.log(response.rows[0].pw);
 
-                    makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
+                        
+                  
               }
             }
         });
-    }
-
-    else if(req.files) {
-        let text = 'INSERT INTO posts(username,description,photoName,dateUploaded) VALUES($1,$2,$3,$4)';
-        let description = req.body.userDescription || "";
-        let file = req.files.userImage;
-        let filename = file.name;
-        let values = [req.session.username,description,filename,'NOW()'];
-
-        pool.query(text, values, (err, response) => {
-            if (err) {
-                console.log(err)
-            } else {console.log("Upload done")  }
-        });
-
-        file.mv("./data/posts/" + filename, (err) => {
-            if(err) {
-                console.log(err);
-            } else {
-                makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
-            }
-        });
-    }
-     else{
-        res.send("rip");
     }
 });
 
@@ -187,23 +186,4 @@ app.get('/profile', (req, res) => {
 
 app.listen(PORT, _ => {
     console.log(`Server has started on port ${PORT}`);
-});
-
-function makeQuery(userName,userId,verification,profilePic, res) {
-    pool.query('SELECT * FROM posts ORDER BY postid DESC LIMIT 5', (err, response) => {
-        if (err) {
-          console.log(err)
-        } else { 
-            res.render('home.ejs',{
-                loggedOn: true, 
-                posts: response.rows, 
-                user:{
-                    username: userName,
-                    id: userId,
-                    isVerified: verification,
-                    profilePic: profilePic
-                }
-            })
-         };
-    });
-}
+})

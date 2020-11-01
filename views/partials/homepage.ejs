@@ -1,15 +1,14 @@
 <%- include("navbar")%>
 
-<div class="timeline_main">
-    <%- include("newpost") %>
-
 <% posts.forEach(post => { %>
+
+    <div class="timeline_main">
         <div class="card">
             <div class="username_card">
                 <div>
                     <img src="/img/ProfilePictures/profilna.png" alt="">
                     <div class="linfo_card">
-                        <p>@<%= post.username %></p>
+                        <p>@david.arsdadadadadadov3 </p>
                         <p style="font-weight: 400; color:#95a5a6" class="linfo_card-location">lokacija: pekol</p>
                     </div>
                 </div>     
@@ -35,8 +34,8 @@
                 <p><%= post.description %></p>
             </div>
         </div>
+    </div>
 <% }) %> 
-</div>
 
 <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg">
     <symbol id="upvote" viewBox="0 0 477.18 252.06">
