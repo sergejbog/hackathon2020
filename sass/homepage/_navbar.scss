@@ -30,6 +30,7 @@
     
         .profile_rounder{
             position:relative;
+            cursor: pointer;
             &::before{  
                 content: "";    
                 position: absolute;
