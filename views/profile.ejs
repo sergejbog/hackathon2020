@@ -20,20 +20,25 @@
         <a href="javascript:void(0)" id="events" class="<% if(activeNow == "events") { %> <%="a-active"%> <% } %>">Events</a>
     </div>
     <div class="profile-feed-photos">
+        <% for(let i = 0; i < profile.postRows; i++) { %>
         <div class="profile-feed-photos-row">
-            <img src="/img/ProfilePictures/profilna.png" class="profile-feed-photos-photo" alt="">
-            <img src="/img/mainimage.jpg" class="profile-feed-photos-photo" alt="">
-            <img src="/img/ProfilePictures/profilna.png" class="profile-feed-photos-photo" alt="">
+            <% for(let j = i*3; j < (i*3)+3; j++) { %>
+                <% if(!profile.posts[j]) break %>
+                <img src="/posts/<%= profile.posts[j]%>" class="profile-feed-photos-photo" alt="">
+            <% } %>
         </div>
+    <% } %>
     </div>
     <div class="profile-feed-events">
-        <p>Чао</p>
+        <p>Coming Soon!</p>
     </div>
 </div>
 
-<!-- <div class="popup-feed-photos">
-    
-</div> -->
+<div class="popup-feed-photos">
+    <div class="popup-feed-photos-container">
+        <img src="/posts/maxresdefault.jpg" alt="">
+    </div>
+</div>
 
 <script>
     let eventsButton = {
@@ -72,11 +77,23 @@
         eventsButton.change();
     });
 
+    let popUp = document.querySelector('.popup-feed-photos');
+    let popUpImg = document.querySelector('.popup-feed-photos img');
+
     let feedPhotos = document.querySelectorAll('.profile-feed-photos-photo');
     feedPhotos.forEach((photo,i) => {
         photo.addEventListener('click', e => {
-            console.log(i);
+            let photoName = photo.src.split('/')[4]
+            popUp.style.opacity = 1;
+            popUp.style.visibility = 'visible';
+
+            popUpImg.src = '/posts/' + photoName;
         })
+    });
+
+    popUp.addEventListener('click', e => {
+        popUp.style.opacity = 0;
+        popUp.style.visibility = 'hidden';
     })
 </script>
 

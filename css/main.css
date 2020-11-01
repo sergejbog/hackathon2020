@@ -370,11 +370,12 @@ body {
     margin-top: 50px; }
     .profile-container .profile-feed-photos-row {
       display: flex;
-      justify-content: space-around; }
+      justify-content: space-between; }
       .profile-container .profile-feed-photos-row img {
         width: 25%;
         height: 250px;
         object-fit: cover;
+        margin-bottom: 50px;
         cursor: pointer;
         transition: scale(1);
         transition: all .3s; }
@@ -390,14 +391,25 @@ body {
         width: 100%;
         height: 250px; } }
   .profile-container .profile-feed-events {
-    display: none; }
+    display: none;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 50px; }
 
 .popup-feed-photos {
   width: 100vw;
+  height: 100%;
   position: fixed;
   top: 0;
-  background-color: #95a5a6;
-  opacity: .6; }
+  background-color: #95a5a6c7;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .2s; }
+  .popup-feed-photos-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); }
 
 .navbar_container {
   margin: 0 auto;

@@ -76,12 +76,13 @@
         
         &-row {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             
             img {
                 width: 25%;
                 height: 250px;
                 object-fit: cover;
+                margin-bottom: 50px;
                 cursor: pointer;
                 transition: scale(1.0);
                 transition: all .3s;
@@ -109,15 +110,26 @@
     }}
     .profile-feed-events {
         display: none;
+        font-size: 30px;
+        text-align: center;
+        margin-top: 50px;
     }
 
 }
 
 .popup-feed-photos {
     width: 100vw;
-    // height: 100%;
+    height: 100%;
     position: fixed;
     top: 0;
-    background-color: #95a5a6;
-    opacity: .6;
+    background-color: #95a5a6c7;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: all .2s;
+
+    &-container {
+        @include center;
+    }
 }
+

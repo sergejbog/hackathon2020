@@ -180,7 +180,7 @@ app.post('/', function(req, res){
             if(err) {
                 console.log(err);
             } else {
-                makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
+                makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, true);
             }
         });
     }
@@ -213,20 +213,32 @@ app.get('/*',(req,res) => {
             if(response.rows[0]) {
                 if(req.session.loggedOn == undefined) res.render("home.ejs", {loggedOn : false, month: month, loginError: false});
                 else {
-                    res.render('profile.ejs',{
-                        loggedOn: true,
-                        user:{
-                            username: req.session.username,
-                            id: req.session.userId,
-                            isVerified: req.session.isVerified,
-                            profilePic: req.session.profilePic
-                        },
-                        profile: {
-                            username: response.rows[0].username,
-                            profilePic: response.rows[0].profilepicture
-                        },
-                        activeNow: 'photos'
-                    })
+                    pool.query('Select * FROM posts WHERE username=$1',[username], (err,responsePosts) => {
+                        if(err) console.log(err);
+                        else {
+                            let photoNames = [];
+                            for(let i = 0; i < responsePosts.rows.length; i++) {
+                                photoNames.push(responsePosts.rows[i].photoname);
+                            }
+                            res.render('profile.ejs',{
+                                loggedOn: true,
+                                user:{
+                                    username: req.session.username,
+                                    id: req.session.userId,
+                                    isVerified: req.session.isVerified,
+                                    profilePic: req.session.profilePic
+                                },
+                                profile: {
+                                    username: response.rows[0].username,
+                                    profilePic: response.rows[0].profilepicture,
+                                    posts: photoNames,
+                                    postRows: Math.ceil(photoNames.length / 3)
+                                },
+                                activeNow: 'photos'
+                            })
+                        }
+                    });
+                    
                 }
                
             } else {
