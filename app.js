@@ -70,10 +70,6 @@ app.get('/verify-account', (req, res) => {
 })
 
 app.post('/', function(req, res){
-    console.log(req.body.year);
-    console.log(req.body.usernameLogin);
-    console.log(req.body.userImage);
-
     if(req.body.year) {
         pool.query('SELECT * FROM users WHERE username=$1', [req.body.usernameRegister], (err, response) => {
             if (err) {
