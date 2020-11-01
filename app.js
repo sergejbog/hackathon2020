@@ -131,6 +131,7 @@ app.post('/', function(req, res){
                             res.send("uspesna registracija")
                         }
                     });
+                    res.render("success.ejs")
                 } else {
                     res.render("error.ejs", {error: "User already exists!"});
                 }
