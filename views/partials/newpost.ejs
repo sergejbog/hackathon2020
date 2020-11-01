@@ -5,9 +5,9 @@
     <div class="register_div upload_div">
         <span id="closeUpload">X</span>
         <p class="sign-up">Upload Your Good Deed!</p>
-        <form action="/" method="POST">
+        <form action="/" method="POST" enctype="multipart/form-data">
 
-            <input type="file" accept="image/*" onchange="loadFile(event)" name="userImage" required>
+            <input type="file" accept="image/*"  onchange="loadFile(event)" name="userImage" required>
             <p><img id="output" style="width:100%;"></p>
             <label for="userDescription" class="input_label">Description:</label>
             <input type="text" name="userDescription">

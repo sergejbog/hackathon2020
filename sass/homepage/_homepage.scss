@@ -92,8 +92,16 @@
        
        .linfo_card{
            display:flex;
+           align-items: start;
            flex-direction: column;
            align-self: center;
+           text-align: left;
+
+           > p {
+               width: 100%;
+               margin-left: 0;
+               padding-left: 10px;
+           }
 
            &-location {
                align-self: start;
