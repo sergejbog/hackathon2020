@@ -55,15 +55,18 @@ app.get('/verify-account', (req, res) => {
     pool.query("SELECT * FROM verification WHERE mailToken=$1", [req.query.token], (err, response) => {
         if (err) { console.log(err) }
         else {
-            if (response.rows[0].username != undefined) {
-                
+            if (response.rows[0] != undefined) {
                 pool.query("UPDATE users SET verified=$1 WHERE username=$2", [true, response.rows[0].username], (err, res) => {
                     if (err) { console.log(err) }
                     else { console.log(res) }
                 });
-                res.render('home.ejs', { month: month, loginError: false, posts: response.rows }); 
+                pool.query("DELETE FROM verification WHERE mailToken=$1", [req.query.token], (err,response) => {
+                    if(err) {console.log(err)}
+                    else {console.log(response)}
+                });
+                res.render('home.ejs', { month: month, loginError: false, posts: response.rows, loggedOn: false }); 
             } else {
-                console.log('ne postoj')
+                res.send('ne postoj')
             }
         }
     });
