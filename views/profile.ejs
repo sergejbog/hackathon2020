@@ -23,6 +23,7 @@
         <% for(let i = 0; i < profile.postRows; i++) { %>
         <div class="profile-feed-photos-row">
             <% for(let j = i*3; j < (i*3)+3; j++) { %>
+
                 <% if(!profile.posts[j]) break %>
                 <img src="/posts/<%= profile.posts[j]%>" class="profile-feed-photos-photo" alt="">
             <% } %>

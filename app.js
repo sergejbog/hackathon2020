@@ -226,13 +226,15 @@ app.get('/*',(req,res) => {
                             for(let i = 0; i < responsePosts.rows.length; i++) {
                                 photoNames.push(responsePosts.rows[i].photoname);
                             }
+                            console.log('hello');
                             res.render('profile.ejs',{
                                 loggedOn: true,
                                 user:{
                                     username: req.session.username,
                                     id: req.session.userId,
                                     isVerified: req.session.isVerified,
-                                    profilePic: req.session.profilePic
+                                    profilePic: req.session.profilePic,
+                                    points: req.session.points
                                 },
                                 profile: {
                                     username: response.rows[0].username,
@@ -241,25 +243,9 @@ app.get('/*',(req,res) => {
                                     postRows: Math.ceil(photoNames.length / 3)
                                 },
                                 activeNow: 'photos'
-                            })
+                            });
                         }
                     });
-                    
-                    res.render('profile.ejs',{
-                        loggedOn: true,
-                        user:{
-                            username: req.session.username,
-                            id: req.session.userId,
-                            isVerified: req.session.isVerified,
-                            profilePic: req.session.profilePic,
-                            points: req.session.points
-                        },
-                        profile: {
-                            username: response.rows[0].username,
-                            profilePic: response.rows[0].profilepicture
-                        },
-                        activeNow: 'photos'
-                    })
                 }
                
             } else {
