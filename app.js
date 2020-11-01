@@ -1,6 +1,12 @@
 const { Pool, Client } = require('pg');
 const express = require('express');
-const config = require('./config.json');
+const config = {
+    "dbhost": "rogue.db.elephantsql.com",
+    "dbuser": "mlgkgimi",
+    "dbpass": "TUHNL0YIUcTmJEJ21LZwKv9URVRimFPy",
+    "dbport": 5432,
+    "secret": "LjLS=ULfCZ4F$5KtFWTF%fLwqBCr+gsP?5yg#9B9#N=??W2WX"
+};
 const path = require('path');
 const fs = require('fs');
 const app = express();
