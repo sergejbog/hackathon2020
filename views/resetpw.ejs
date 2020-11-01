@@ -1,0 +1,47 @@
+<%- include("partials/header") %>
+<div id="newpw_popup">
+    <div class="register_div">
+        <p class="sign-up">Change Password!</p>
+        <form action="/" method="POST">
+
+
+            <label for="us" class="input_label">Username:</label>
+            <p class="register-error hidden">Username doesn't exists</p> 
+            <input type="text" name="us" required> 
+            
+
+            <div class="register_two">
+                <div class="register_two-row">
+                    <label for="newpw1" class="input_label">New Password:</label>
+                    <input type="password" name="newpw1" required>
+                </div>
+                
+                <div class="register_two-row">
+                    <label for="newpw2" class="input_label">Confirm Password:</label>
+                    <input type="password" name="newpw2" required>
+                </div>
+            </div>
+
+            <button class="register-button" type="submit">Change Password</button>
+
+        </form>
+    </div>
+</div> 
+<script>
+    let resetpassPopup = document.querySelector('#newpw_popup'),
+        resetpassButton = document.querySelector('#forgot-pass'),
+        closeReset = document.querySelector('#closeNewpw');
+
+    resetpassButton.addEventListener('click', _ => {
+        resetpassPopup.style.opacity = 1;
+        resetpassPopup.style.visibility = 'visible';
+    });
+
+    closeReset.addEventListener('click', _ => {
+        resetpassPopup.style.opacity = 0;
+        resetpassPopup.style.visibility = 'hidden';
+    });
+</script>
+
+
+<%- include("partials/footer") %>

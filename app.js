@@ -42,14 +42,63 @@ const pool = new Pool({
     port: config.dbport
 });
 
+var transporter = nodemailer.createTransport({
+    service: 'yahoo',
+    auth: {
+        user: 'hackathon2020@yahoo.com',
+        pass: 'kijodjzcwupsptmi'
+    }
+});
+
+
 app.get('/', (req,res) => {
-    console.log("od ovde " + req.session.userId);
     if(req.session.userId){
         makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, true, req.session.points);
     } else {
         res.render("home.ejs", {loggedOn : false, month: month, loginError: false})
     }
 })
+
+
+
+app.get('/reset-pass',(req,res) =>{
+    if(req.body.us){
+        pool.query("SELECT * FROM users WHERE username=$1",[req.body.us],(err,res) =>{
+            if(err){
+                console.log("GRESKA");
+                console.log(err);
+            }else{
+                // if (res.rows[0] != undefined) {
+                    console.log("PASS SE SMENA.");
+                    pool.query("UPDATE users SET pw=$1 WHERE username=$2", [req.query.newpw1, req.body.us], (err, res) => {
+                        if (err) { console.log(err) }
+                        else { console.log(res) }
+                    });
+                    pool.query("DELETE FROM verification WHERE mailToken=$1", [req.query.token], (err,response) => {
+                        if(err) {console.log(err)}
+                        else {console.log(response)}
+                    });
+                    res.render('home.ejs', { month: month, loginError: false, posts: response.rows, loggedOn: false }); 
+                // } else {
+                //     res.send('This user does not exist.')
+                // }
+            }
+        })
+
+    }else{
+        console.log(req.query.tokenpw);
+        pool.query("SELECT * FROM resetpass WHERE passToken=$1", [req.query.tokenpw], (err, response) => {
+            if (err) { console.log(err) }
+            else {
+                if (response.rows[0].username != undefined) {
+                    res.render('resetpw.ejs');
+                } else res.send("This user does not exist.")
+            }
+        });
+    }
+
+})
+
 app.get('/verify-account', (req, res) => {
     console.log(req.query.token);
     pool.query("SELECT * FROM verification WHERE mailToken=$1", [req.query.token], (err, response) => {
@@ -66,7 +115,7 @@ app.get('/verify-account', (req, res) => {
                 });
                 res.render('home.ejs', { month: month, loginError: false, posts: response.rows, loggedOn: false }); 
             } else {
-                res.send('ne postoj')
+                res.send('This user does not exist.')
             }
         }
     });
@@ -84,14 +133,6 @@ app.post('/', function(req, res){
                     let text = 'INSERT INTO users(username,firstname,lastname,email,pw,dob,gender) VALUES($1, $2, $3, $4, $5, $6, $7)';
                     let values = [req.body.usernameRegister, req.body.firstname, req.body.lastname, req.body.email, hash.digest('hex'), dob, req.body.gender];
 
-
-                    var transporter = nodemailer.createTransport({
-                        service: 'yahoo',
-                        auth: {
-                            user: 'hackathon2020@yahoo.com',
-                            pass: 'kijodjzcwupsptmi'
-                        }
-                    });
 
 
                     let randomStringToken = randomstring.generate();
@@ -128,7 +169,7 @@ app.post('/', function(req, res){
                             console.log("2")
                             console.log(err)
                         } else {
-                            res.send("uspesna registracija")
+                            res.send("Successful registration. Check your e-mail for verification.")
                         }
                     });
                     res.render("success.ejs")
@@ -137,7 +178,7 @@ app.post('/', function(req, res){
                 }
             }
         });
-    }
+    } 
 
     else if(req.body.usernameLogin){
         let text = `SELECT * FROM users WHERE username = $1`;
@@ -190,8 +231,50 @@ app.post('/', function(req, res){
             }
         });
     }
-     else{
-        res.render("error.ejs", {error: "A fatal error has occurred"});
+
+    else if(req.body.resetpw){
+        pool.query('SELECT * FROM users WHERE username=$1', [req.body.resetpw], (err, response) =>{
+            if (err) {
+                console.log(err)
+            }else{
+                if(response.rows[0]==undefined){
+                    res.send("This user does not exist.");
+                }else{
+                    let resetToken = randomstring.generate();
+
+                    const url = `http://localhost:3000/reset-pass?tokenpw=${resetToken}`;
+                    
+
+                    var mailOptions = {
+                        from: 'hackathon2020@yahoo.com',
+                        to: response.rows[0].email,
+                        subject: "Change password",
+                        html: "Hello " + response.rows[0].firstname + ", <br> Please Click on the link to change your password.<br><a href=" + url + ">Click here to change password</a>"
+                    };
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+
+                            console.log(error);
+                        } else {
+                            console.log('Email sent: ' + info.response);
+                        }
+                    });
+                    pool.query("INSERT INTO resetpass(username,passtoken) VALUES($1,$2)", [req.body.resetpw, resetToken], (err, resp) => {
+                        if (err) { console.log(err) }
+                        else {
+                            res.send("Check your email!")
+                        }
+                    });
+                }
+                
+
+            }
+        })
+
+    }
+
+    else{
+        res.send("rip");
     }
 });
 

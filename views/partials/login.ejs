@@ -1,7 +1,7 @@
 <div class="login_div">
     <form action="/" method="POST">
         <label for="usernameLogin" class="input_label">Username:</label>
-        <input type="text" name="usernameLogin" required>
+        <input type="text" name="usernameLogin" class="usernameInputLogin" required>
         
         <label for="passwordLogin" class="input_label">Password:</label>
         <input type="password" name="passwordLogin" required>
@@ -10,12 +10,24 @@
 
         <button type="submit">Login</button>
 
-        <p><a href="javascript:void(0)">Forgot Password?</a></p>
+        <p><a href="javascript:void(0) " id="forgot-pass">Forgot Password?</a></p>
         <p>No account? <a href="javascript:void(0)" id="register-now">Register Now!</a></p>
 
     </form>
 </div>
 
+<div id="resetPass_popup">
+    <div class="register_div">
+        <span id="closeResetPass">X</span>
+        <p class="sign-up">Change Password!</p>
+        <form action="/" method="POST">
+            <label for="resetpw" class="input_label">Username:</label>
+            <p class="register-error hidden">Username doesn't exists</p> 
+             <input type="text" name="resetpw" required> 
+            <button class="register-button" type="submit">Change Password</button>
+        </form>
+    </div>
+</div> 
 
 <div id="register_popup">
     <div class="register_div">
@@ -101,7 +113,20 @@
 </div>
 
 <script>
-  
+    let resetpassPopup = document.querySelector('#resetPass_popup'),
+        resetpassButton = document.querySelector('#forgot-pass'),
+        closeReset = document.querySelector('#closeResetPass');
+
+    resetpassButton.addEventListener('click', _ => {
+        resetpassPopup.style.opacity = 1;
+        resetpassPopup.style.visibility = 'visible';
+    });
+
+    closeReset.addEventListener('click', _ => {
+        resetpassPopup.style.opacity = 0;
+        resetpassPopup.style.visibility = 'hidden';
+    });
+
     let registerPopup = document.querySelector('#register_popup'),
         registerButton = document.querySelector('#register-now'),
         closePopup = document.querySelector('#closeRegister');
