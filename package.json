@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "scss": "node-sass --watch sass -o css"
+    "scss": "node-sass --watch sass -o css",
+    "heroku-postbuild": "npm run build"
   },
   "author": "",
   "license": "ISC",
