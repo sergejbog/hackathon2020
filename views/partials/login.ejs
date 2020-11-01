@@ -53,6 +53,7 @@
                     <input type="password" name="password2" required>
                 </div>
             </div>
+            <p class="login-error password-error hidden">Passwords don't match</p>
     
             <p>Birthday:</p>
             <div class="birthday-register">
@@ -119,6 +120,15 @@
         registerUsername = document.querySelector('input[name="usernameRegister"]'),
         errorRegister = document.querySelector('.register-error');
 
+    let password1 = document.querySelector('input[name="password1"]'),
+        password2 = document.querySelector('input[name="password2"]'),
+        passwordError = document.querySelector('.password-error');
+
+    password2.addEventListener('blur', _ => {
+        if(password1.value != password2.value) passwordError.classList.remove('hidden');
+        else passwordError.classList.add('hidden');
+    })
+
     registerUsername.addEventListener('blur', _ => {
         fetch(`/check?username=${registerUsername.value}`)
             .then(response => response.json())
@@ -130,7 +140,4 @@
                 }
         });
     });
-
-
-
 </script>
