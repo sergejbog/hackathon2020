@@ -54,7 +54,7 @@ var transporter = nodemailer.createTransport({
 app.get('/', (req,res) => {
     console.log("od ovde " + req.session.userId);
     if(req.session.userId){
-        makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, true);
+        makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, true, req.session.points);
     } else {
         res.render("home.ejs", {loggedOn : false, month: month, loginError: false})
     }
@@ -85,16 +85,18 @@ app.get('/verify-account', (req, res) => {
     pool.query("SELECT * FROM verification WHERE mailToken=$1", [req.query.token], (err, response) => {
         if (err) { console.log(err) }
         else {
-            if (response.rows[0].username != undefined) {
-                
+            if (response.rows[0] != undefined) {
                 pool.query("UPDATE users SET verified=$1 WHERE username=$2", [true, response.rows[0].username], (err, res) => {
                     if (err) { console.log(err) }
                     else { console.log(res) }
                 });
-                //res.send("Uspesna verifikacija");
-                res.render('home.ejs', { month: month, loginError: false, posts: response.rows }); 
+                pool.query("DELETE FROM verification WHERE mailToken=$1", [req.query.token], (err,response) => {
+                    if(err) {console.log(err)}
+                    else {console.log(response)}
+                });
+                res.render('home.ejs', { month: month, loginError: false, posts: response.rows, loggedOn: false }); 
             } else {
-                console.log('ne postoj')
+                res.send('ne postoj')
             }
         }
     });
@@ -152,7 +154,7 @@ app.post('/', function(req, res){
                         }
                     });
                 } else {
-                    res.send("vejce postoj user");
+                    res.render("error.ejs", {error: "User already exists!"});
                 }
             }
         });
@@ -174,10 +176,12 @@ app.post('/', function(req, res){
                   hash.reset();
               } else {
                     hash.reset();
+                    console.log(response.rows[0])
                     req.session.userId = response.rows[0].id;
                     req.session.username = response.rows[0].username;
                     req.session.isVerified = response.rows[0].verified;
                     req.session.profilePic = response.rows[0].profilepicture;
+                    req.session.points = response.rows[0].points;
                     req.session.loggedOn = true;
 
                     makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, req.session.loggedOn);
@@ -203,7 +207,7 @@ app.post('/', function(req, res){
             if(err) {
                 console.log(err);
             } else {
-                makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
+                makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, true);
             }
         });
     }
@@ -278,13 +282,40 @@ app.get('/*',(req,res) => {
             if(response.rows[0]) {
                 if(req.session.loggedOn == undefined) res.render("home.ejs", {loggedOn : false, month: month, loginError: false});
                 else {
+                    pool.query('Select * FROM posts WHERE username=$1',[username], (err,responsePosts) => {
+                        if(err) console.log(err);
+                        else {
+                            let photoNames = [];
+                            for(let i = 0; i < responsePosts.rows.length; i++) {
+                                photoNames.push(responsePosts.rows[i].photoname);
+                            }
+                            res.render('profile.ejs',{
+                                loggedOn: true,
+                                user:{
+                                    username: req.session.username,
+                                    id: req.session.userId,
+                                    isVerified: req.session.isVerified,
+                                    profilePic: req.session.profilePic
+                                },
+                                profile: {
+                                    username: response.rows[0].username,
+                                    profilePic: response.rows[0].profilepicture,
+                                    posts: photoNames,
+                                    postRows: Math.ceil(photoNames.length / 3)
+                                },
+                                activeNow: 'photos'
+                            })
+                        }
+                    });
+                    
                     res.render('profile.ejs',{
                         loggedOn: true,
                         user:{
                             username: req.session.username,
                             id: req.session.userId,
                             isVerified: req.session.isVerified,
-                            profilePic: req.session.profilePic
+                            profilePic: req.session.profilePic,
+                            points: req.session.points
                         },
                         profile: {
                             username: response.rows[0].username,
@@ -295,7 +326,7 @@ app.get('/*',(req,res) => {
                 }
                
             } else {
-                res.send('nema strana');
+                    res.render("error.ejs", {error:"Page Doesn't Exist!"});
             }
         }
     })
@@ -305,7 +336,7 @@ app.listen(PORT, _ => {
     console.log(`Server has started on port ${PORT}`);
 });
 
-function makeQuery(userName,userId,verification,profilePic, res, loggedOn) {
+function makeQuery(userName,userId,verification,profilePic, res, loggedOn,points) {
     pool.query('SELECT * FROM posts ORDER BY postid DESC LIMIT 5', (err, response) => {
         if (err) {
           console.log(err)
@@ -318,7 +349,9 @@ function makeQuery(userName,userId,verification,profilePic, res, loggedOn) {
                     username: userName,
                     id: userId,
                     isVerified: verification,
-                    profilePic: profilePic
+                    profilePic: profilePic,
+                    points:points
+
                 },
                 loginError: false
             })
