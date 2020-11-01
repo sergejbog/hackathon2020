@@ -1,11 +1,14 @@
 <div class="navbar_containter_containter">
     <div class="navbar_container">
-        
-
+        <div class="navbar_logo">
+            <a href="/">
+                <img src="/rsz_3logo.png" alt="">
+            </a>
+        </div>
         <div class="navbar_profile">
-            <div class = "profile_rounder">
-                <img class = "profile_picture" src="/img/ProfilePictures/profilna.png" alt="">
-            </div>
+            <a href="<%= user.username %>" class = "profile_rounder">
+                <img class = "profile_picture" src="/img/ProfilePictures/<%= user.profilePic %>" alt="">
+            </a>
             <div class="user_points">
                 <p>Points: 1000</p>
             </div>
@@ -13,7 +16,5 @@
         <div class="navbar_search">
             <input type="text" name="search" id="" placeholder = "Search!" autocomplete="off">
         </div>
-
-
     </div>
 </div>

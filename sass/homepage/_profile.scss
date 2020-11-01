@@ -11,12 +11,23 @@
 
         img {
             border-radius: 12px;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
         }
 
          &__text {
             font-size: 20px;
             margin-top: 10px;
             text-align: center;
+            
+         
+                @media screen and (max-width: 800px) {
+                &-numberinfo{
+                    flex-direction: column;
+                }
+            }
+              
 
             &-numberinfo {
                 display: flex;
@@ -57,15 +68,16 @@
         }
     }
 
+    
     .profile-feed-photos {
         width: 100%;
         height: auto;
         margin-top: 50px;
-
+        
         &-row {
             display: flex;
             justify-content: space-around;
-
+            
             img {
                 width: 25%;
                 height: 250px;
@@ -80,7 +92,21 @@
             }
         }
     }
+    @media screen and (max-width: 800px) {
+        .profile-feed-photos{
+            
 
+            &-row{
+                flex-direction: column;
+                width:100%;
+                height:100%;
+                img{
+                    margin-bottom:15px;
+                    width:100%;
+                    height:250px;
+                }
+            }
+    }}
     .profile-feed-events {
         display: none;
     }

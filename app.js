@@ -2,25 +2,37 @@ const { Pool, Client } = require('pg');
 const express = require('express');
 const config = require('./config.json');
 const path = require('path');
+const fs = require('fs');
 const app = express();
 require('ejs');
+const session = require('express-session');
+const upload = require('express-fileupload');
+  
 const { SHA3 } = require('sha3');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const randomstring = require("randomstring");
+const { render } = require('ejs');
 const hash = new SHA3(512);
 
 const PORT = process.env.PORT || 3000;
 
 const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-
-
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+
 app.use(express.static('css'));
 app.use(express.static('data'));
+
+app.use(session({
+    secret: config.secret,
+    resave: false,
+    saveUninitialized: false,
+}));
+
+app.use(upload());
 
 const pool = new Pool({
     user: config.dbuser,
@@ -30,14 +42,13 @@ const pool = new Pool({
     port: config.dbport
 });
 
-app.get('/', (req, res) => {
-    pool.query('SELECT * FROM posts ORDER BY dateUploaded DESC LIMIT 5', (err, response) => {
-        if (err) {
-            console.log(err)
-        } else {
-            res.render('home.ejs', { month: month, loginError: false, posts: response.rows });
-        }
-    });
+app.get('/', (req,res) => {
+    console.log("od ovde " + req.session.userId);
+    if(req.session.userId){
+        makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, true);
+    } else {
+        res.render("home.ejs", {loggedOn : false, month: month, loginError: false})
+    }
 })
 
 app.get('/verify-account', (req, res) => {
@@ -60,10 +71,8 @@ app.get('/verify-account', (req, res) => {
     });
 })
 
-
-
-app.post('/', function (req, res) {
-    if (req.body.year) {
+app.post('/', function(req, res){
+    if(req.body.year) {
         pool.query('SELECT * FROM users WHERE username=$1', [req.body.usernameRegister], (err, response) => {
             if (err) {
                 console.log(err)
@@ -113,7 +122,6 @@ app.post('/', function (req, res) {
 
 
                     hash.reset();
-
                     pool.query(text, values, (err, response) => {
                         if (err) {
                             console.log("2")
@@ -129,7 +137,7 @@ app.post('/', function (req, res) {
         });
     } 
 
-    else {
+    else if(req.body.usernameLogin){
         let text = `SELECT * FROM users WHERE username = $1`;
         let values = [req.body.usernameLogin];
 
@@ -138,25 +146,48 @@ app.post('/', function (req, res) {
                 console.log(err)
             } else {
                 hash.update(req.body.passwordLogin);
-                if (response.rows[0] == undefined) {
-                    res.render('home.ejs', { month: month, loginError: true });
-                } else if (hash.digest('hex') != response.rows[0].pw) {
-                    res.render('home.ejs', { month: month, loginError: true });
+              if ( response.rows[0] == undefined){
+                    res.render('home.ejs',{month: month, loginError: true, loggedOn: false});
+              } else if(hash.digest('hex') != response.rows[0].pw){
+                    res.render('home.ejs',{month: month, loginError: true, loggedOn: false});
+                  hash.reset();
+              } else {
                     hash.reset();
-                } else {
-                    hash.reset();
-                    res.render("homepage.ejs", {
-                        loggedOn: true,
-                        user: {
-                            username: response.rows[0].username,
-                            id: response.rows[0].id,
-                            isVerified: response.rows[0].verified
-                        }
-                    });
+                    req.session.userId = response.rows[0].id;
+                    req.session.username = response.rows[0].username;
+                    req.session.isVerified = response.rows[0].verified;
+                    req.session.profilePic = response.rows[0].profilepicture;
+                    req.session.loggedOn = true;
 
-                }
+                    makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, req.session.loggedOn);
+              }
             }
         });
+    }
+
+    else if(req.files) {
+        let text = 'INSERT INTO posts(username,description,photoName,dateUploaded) VALUES($1,$2,$3,$4)';
+        let description = req.body.userDescription || "";
+        let file = req.files.userImage;
+        let filename = file.name;
+        let values = [req.session.username,description,filename,'NOW()'];
+
+        pool.query(text, values, (err, response) => {
+            if (err) {
+                console.log(err)
+            } else {console.log("Upload done")  }
+        });
+
+        file.mv("./data/posts/" + filename, (err) => {
+            if(err) {
+                console.log(err);
+            } else {
+                makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
+            }
+        });
+    }
+     else{
+        res.send("rip");
     }
 });
 
@@ -176,10 +207,58 @@ app.get('/check', (req, res) => {
     });
 });
 
-app.get('/profile', (req, res) => {
-    res.render('profile.ejs', { activeNow: 'photos' });
+app.get('/*',(req,res) => {
+    let username = req.path.split('/')[1];
+    pool.query('SELECT * FROM users WHERE username=$1',[username], (err, response) => {
+        if(err) console.log(err);
+        else {
+            if(response.rows[0]) {
+                if(req.session.loggedOn == undefined) res.render("home.ejs", {loggedOn : false, month: month, loginError: false});
+                else {
+                    res.render('profile.ejs',{
+                        loggedOn: true,
+                        user:{
+                            username: req.session.username,
+                            id: req.session.userId,
+                            isVerified: req.session.isVerified,
+                            profilePic: req.session.profilePic
+                        },
+                        profile: {
+                            username: response.rows[0].username,
+                            profilePic: response.rows[0].profilepicture
+                        },
+                        activeNow: 'photos'
+                    })
+                }
+               
+            } else {
+                res.send('nema strana');
+            }
+        }
+    })
 });
 
 app.listen(PORT, _ => {
     console.log(`Server has started on port ${PORT}`);
-})
+});
+
+function makeQuery(userName,userId,verification,profilePic, res, loggedOn) {
+    pool.query('SELECT * FROM posts ORDER BY postid DESC LIMIT 5', (err, response) => {
+        if (err) {
+          console.log(err)
+        } else { 
+            res.render('home.ejs',{
+                loggedOn: loggedOn,
+                month: month,
+                posts: response.rows, 
+                user:{
+                    username: userName,
+                    id: userId,
+                    isVerified: verification,
+                    profilePic: profilePic
+                },
+                loginError: false
+            })
+         };
+    });
+} 
