@@ -23,6 +23,10 @@
                 font-size:2rem;
                 
             }}
+            @media screen and (max-width: 1000px) {
+                #kms{
+                    visibility:hidden;
+                }
     
         .profile_rounder{
             position:relative;
@@ -47,13 +51,21 @@
             left:50%;
             transform: translate(-50%,-50%);
             input{
-                
                 border:none;        
                 width:25vw;
                 padding:10px;
                 
         
             }
+            @media screen and (max-width: 1366px) {
+                input{
+                    width:40vw;
+                }
+            }
+            @media screen and (max-width: 800px) {
+                input{
+                    width:90%;
+                }
             input:not([type="radio"]),select {
                 border: 1px solid #888888;
                 padding: 1rem 1rem;
@@ -66,4 +78,4 @@
                 background-color: #cccccc;
             }
         }
-}
+}}}

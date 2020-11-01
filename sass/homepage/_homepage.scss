@@ -92,6 +92,7 @@
         }
        
        .linfo_card{
+           word-break: break-all;
            display:flex;
            flex-direction: column;
            align-self: center;
@@ -173,3 +174,21 @@
     fill: $color-red;
     stroke: $color-red;
 }
+
+
+@media screen and (max-width: 1366px) {
+    .timeline_main{
+        width:90%;
+        .card{
+        width:70vw;
+        }
+    }
+  }
+  @media screen and (max-width: 800px) {
+    .timeline_main{
+        width:90%;
+        .card{
+        width:90%;
+    }
+    }
+  }
