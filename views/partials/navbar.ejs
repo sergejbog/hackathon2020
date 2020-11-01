@@ -10,7 +10,9 @@
                 <img class = "profile_picture" src="/img/ProfilePictures/<%= user.profilePic %>" alt="">
             </a>
             <div class="user_points">
-                <p>Points: 1000</p>
+                <% if(user.points){%>
+                   <p><%= user.points %>  Points</p>
+                <% } %> 
             </div>
         </div>
         <div class="navbar_search">

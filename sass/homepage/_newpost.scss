@@ -50,4 +50,22 @@ button{
 #closeUpload:hover {
     color: #111111;
 }
+a{
+    text-decoration: none;
+    transition: 0.1s all;
+    &:active{
+        color:#5e85ac;
+    }
+    &:visited{
+        color:#2c3e50;
+    }
+    &:hover{
+        color:#496581;
+    }
+}
+
+#output{
+
+    max-height: 70vh;
+}
 
