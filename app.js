@@ -104,7 +104,7 @@ app.post('/', function(req, res){
                             console.log(response)
                         }
                     });
-                    res.render("congratulations.ejs")
+                    res.render("success.ejs")
                 } else {
                     res.render("error.ejs", {error: "User already exists!"});
                 }
