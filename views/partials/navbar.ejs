@@ -1,7 +1,12 @@
 <div class="navbar_containter_containter">
     <div class="navbar_container">
+        <div class="navbar_logo">
+            <a href="/">
+                <img src="/rsz_3logo.png" alt="">
+            </a>
+        </div>
         <div class="navbar_profile">
-            <a href="/profile" class = "profile_rounder">
+            <a href="<%= user.username %>" class = "profile_rounder">
                 <img class = "profile_picture" src="/img/ProfilePictures/<%= user.profilePic %>" alt="">
             </a>
             <div class="user_points">

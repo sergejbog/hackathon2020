@@ -43,8 +43,9 @@ const pool = new Pool({
 });
 
 app.get('/', (req,res) => {
+    console.log("od ovde " + req.session.userId);
     if(req.session.userId){
-        makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
+        makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, true);
     } else {
         res.render("home.ejs", {loggedOn : false, month: month, loginError: false})
     }
@@ -131,8 +132,9 @@ app.post('/', function(req, res){
                     req.session.username = response.rows[0].username;
                     req.session.isVerified = response.rows[0].verified;
                     req.session.profilePic = response.rows[0].profilepicture;
+                    req.session.loggedOn = true;
 
-                    makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
+                    makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res, req.session.loggedOn);
               }
             }
         });
@@ -180,25 +182,49 @@ app.get('/check', (req, res) => {
     });
 });
 
-app.get('/profile', (req, res) => {
-    makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res,true);
+app.get('/*',(req,res) => {
+    let username = req.path.split('/')[1];
+    pool.query('SELECT * FROM users WHERE username=$1',[username], (err, response) => {
+        if(err) console.log(err);
+        else {
+            if(response.rows[0]) {
+                if(req.session.loggedOn == undefined) res.render("home.ejs", {loggedOn : false, month: month, loginError: false});
+                else {
+                    res.render('profile.ejs',{
+                        loggedOn: true,
+                        user:{
+                            username: req.session.username,
+                            id: req.session.userId,
+                            isVerified: req.session.isVerified,
+                            profilePic: req.session.profilePic
+                        },
+                        profile: {
+                            username: response.rows[0].username,
+                            profilePic: response.rows[0].profilepicture
+                        },
+                        activeNow: 'photos'
+                    })
+                }
+               
+            } else {
+                res.send('nema strana');
+            }
+        }
+    })
 });
 
 app.listen(PORT, _ => {
     console.log(`Server has started on port ${PORT}`);
 });
 
-function makeQuery(userName,userId,verification,profilePic, res,profile) {
-    let renderer = 'home.ejs';
-    if(profile === true) {
-        renderer = 'profile.ejs'
-    }
+function makeQuery(userName,userId,verification,profilePic, res, loggedOn) {
     pool.query('SELECT * FROM posts ORDER BY postid DESC LIMIT 5', (err, response) => {
         if (err) {
           console.log(err)
         } else { 
-            res.render(renderer,{
-                loggedOn: true, 
+            res.render('home.ejs',{
+                loggedOn: loggedOn,
+                month: month,
                 posts: response.rows, 
                 user:{
                     username: userName,
@@ -206,8 +232,8 @@ function makeQuery(userName,userId,verification,profilePic, res,profile) {
                     isVerified: verification,
                     profilePic: profilePic
                 },
-                activeNow: 'photos'
+                loginError: false
             })
          };
     });
-}
+} 

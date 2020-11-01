@@ -408,7 +408,13 @@ body {
   display: flex;
   flex-direction: row-reverse;
   box-shadow: #1111113a 2px 0px 15px 4px;
-  margin-bottom: 5px; }
+  margin-bottom: 5px;
+  position: relative; }
+  .navbar_container .navbar_logo {
+    position: absolute;
+    left: 60px;
+    top: 50%;
+    transform: translateY(-50%); }
   .navbar_container .profile_rounder {
     position: relative;
     cursor: pointer; }
