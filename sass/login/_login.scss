@@ -65,7 +65,8 @@
     }   
 }
 
-#register_popup {
+
+#register_popup, #resetPass_popup {
     width: 100%;
     height: 100vh;
     background-color: #7f8c8d85;
@@ -87,7 +88,7 @@
         margin-top: 0;
     }
 
-    #closeRegister {
+    #closeRegister, #closeResetPass {
         position: absolute;
         right: 3rem;
         top: 3rem;

@@ -35,11 +35,11 @@ app.get('/', (req, res) => {
         if (err) {
             console.log(err)
         } else {
-           //res.send("Uspesna verifikacija");
             res.render('home.ejs', { month: month, loginError: false, posts: response.rows });
         }
     });
 })
+
 app.get('/verify-account', (req, res) => {
     console.log(req.query.token);
     pool.query("SELECT * FROM verification WHERE mailToken=$1", [req.query.token], (err, response) => {
@@ -51,6 +51,7 @@ app.get('/verify-account', (req, res) => {
                     if (err) { console.log(err) }
                     else { console.log(res) }
                 });
+                //res.send("Uspesna verifikacija");
                 res.render('home.ejs', { month: month, loginError: false, posts: response.rows }); 
             } else {
                 console.log('ne postoj')
@@ -126,7 +127,7 @@ app.post('/', function (req, res) {
                 }
             }
         });
-    }
+    } 
 
     else {
         let text = `SELECT * FROM users WHERE username = $1`;
