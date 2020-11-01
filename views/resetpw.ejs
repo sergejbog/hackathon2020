@@ -1,6 +1,6 @@
+<%- include("partials/header") %>
 <div id="newpw_popup">
     <div class="register_div">
-        <span id="closeNewpw">X</span>
         <p class="sign-up">Change Password!</p>
         <form action="/" method="POST">
 
@@ -27,3 +27,21 @@
         </form>
     </div>
 </div> 
+<script>
+    let resetpassPopup = document.querySelector('#newpw_popup'),
+        resetpassButton = document.querySelector('#forgot-pass'),
+        closeReset = document.querySelector('#closeNewpw');
+
+    resetpassButton.addEventListener('click', _ => {
+        resetpassPopup.style.opacity = 1;
+        resetpassPopup.style.visibility = 'visible';
+    });
+
+    closeReset.addEventListener('click', _ => {
+        resetpassPopup.style.opacity = 0;
+        resetpassPopup.style.visibility = 'hidden';
+    });
+</script>
+
+
+<%- include("partials/footer") %>
