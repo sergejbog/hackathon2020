@@ -21,20 +21,9 @@
         <span id="closeResetPass">X</span>
         <p class="sign-up">Change Password!</p>
         <form action="/" method="POST">
-            <label for="usernameRegister" class="input_label">Username:</label>
-            <p class="register-error hidden">Username already exists</p> 
-             <input type="text" name="usernameRegister" required> 
-            <div class="register_two">
-                <div class="register_two-row">
-                    <label for="newpass" class="input_label">New Password:</label>
-                    <input type="password" name="newpass" required>
-                </div>
-                
-                <div class="register_two-row">
-                    <label for="newpass2" class="input_label">Confirm Password:</label>
-                    <input type="password" name="newpass2" required>
-                </div>
-            </div>
+            <label for="resetpw" class="input_label">Username:</label>
+            <p class="register-error hidden">Username doesn't exists</p> 
+             <input type="text" name="resetpw" required> 
             <button class="register-button" type="submit">Change Password</button>
         </form>
     </div>
