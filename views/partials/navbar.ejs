@@ -1,14 +1,8 @@
 <div class="navbar_containter_containter">
     <div class="navbar_container">
-        
-
         <div class="navbar_profile">
             <a href="/profile" class = "profile_rounder">
-                <% if(user.profilePic == "") { %> 
-                    <img class = "profile_picture" src="/img/ProfilePictures/blank-picture.jpg" alt="">
-                <% } else { %> 
-                    <img class = "profile_picture" src="/img/ProfilePictures/<%= user.profilePic %>" alt="">
-                <% } %>
+                <img class = "profile_picture" src="/img/ProfilePictures/<%= user.profilePic %>" alt="">
             </a>
             <div class="user_points">
                 <p>Points: 1000</p>
@@ -19,10 +13,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    let profile = document.querySelector('.profile_rounder');
-    profile.addEventListener('click', e => {
-
-    })
-</script>

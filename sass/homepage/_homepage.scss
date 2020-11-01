@@ -70,6 +70,22 @@
         div{
             display:flex;
             flex-direction: row;
+
+            img {
+                position: relative;
+            }
+            img::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 64px;
+                width: 64px;
+                background-image: url("./blank-picture.jpg");
+                background-size: cover;
+                z-index: 100;
+                border-radius: 12px;
+            }
             p{
                 align-self: center;
                 align-self: left;
@@ -80,7 +96,7 @@
                 font-weight: 600;
                 cursor:pointer;
             }
-        }
+        } 
         img{
             border-radius: 50%;
             border-radius: 12px;

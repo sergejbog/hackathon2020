@@ -12,6 +12,7 @@ const { SHA3 } = require('sha3');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const randomstring = require("randomstring");
+const { render } = require('ejs');
 const hash = new SHA3(512);
 // const verify = require('verify-user.js');
 const PORT = process.env.PORT || 3000;
@@ -129,9 +130,7 @@ app.post('/', function(req, res){
                     req.session.userId = response.rows[0].id;
                     req.session.username = response.rows[0].username;
                     req.session.isVerified = response.rows[0].verified;
-                    req.session.profilePic = response.rows[0].profilePicture || "";
-
-                    console.log(response.rows[0].pw);
+                    req.session.profilePic = response.rows[0].profilepicture;
 
                     makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res);
               }
@@ -182,19 +181,23 @@ app.get('/check', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-    res.render('profile.ejs',{activeNow: 'photos'});
+    makeQuery(req.session.username, req.session.userId, req.session.isVerified,req.session.profilePic, res,true);
 });
 
 app.listen(PORT, _ => {
     console.log(`Server has started on port ${PORT}`);
 });
 
-function makeQuery(userName,userId,verification,profilePic, res) {
+function makeQuery(userName,userId,verification,profilePic, res,profile) {
+    let renderer = 'home.ejs';
+    if(profile === true) {
+        renderer = 'profile.ejs'
+    }
     pool.query('SELECT * FROM posts ORDER BY postid DESC LIMIT 5', (err, response) => {
         if (err) {
           console.log(err)
         } else { 
-            res.render('home.ejs',{
+            res.render(renderer,{
                 loggedOn: true, 
                 posts: response.rows, 
                 user:{
@@ -202,7 +205,8 @@ function makeQuery(userName,userId,verification,profilePic, res) {
                     id: userId,
                     isVerified: verification,
                     profilePic: profilePic
-                }
+                },
+                activeNow: 'photos'
             })
          };
     });

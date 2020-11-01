@@ -3,11 +3,12 @@
 <div class="timeline_main">
     <%- include("newpost") %>
 
-<% posts.forEach(post => { %>
+<% posts.forEach((post,index) => { %>
         <div class="card">
             <div class="username_card">
                 <div>
-                    <img src="/img/ProfilePictures/profilna.png" alt="">
+                    
+                    <img class="profile_pic" src="/img/ProfilePictures/<%= post.username %>.jpg" alt="&nbsp">
                     <div class="linfo_card">
                         <p>@<%= post.username %></p>
                         <p style="font-weight: 400; color:#95a5a6" class="linfo_card-location">lokacija: pekol</p>
